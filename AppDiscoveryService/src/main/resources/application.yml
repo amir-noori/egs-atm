@@ -1,0 +1,14 @@
+
+server:
+  port: 4001
+
+spring:
+  application:
+    name: ATMAppDiscoveryService
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: "http://localhost:4001/eureka"

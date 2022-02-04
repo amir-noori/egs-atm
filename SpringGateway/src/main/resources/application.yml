@@ -1,0 +1,38 @@
+server:
+  port: 4003
+
+spring:
+  application:
+    name: spring-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+      routes:
+        - id: atm-service
+          uri: lb://atm-service
+          predicates:
+          - Path=/atm/**
+        - id: bank-service
+          uri: lb://bank-service
+          predicates:
+            - Path=/bank/**
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:4001/eureka
+
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 'beans,health,routes'
