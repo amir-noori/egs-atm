@@ -2,6 +2,11 @@ package com.egs.ATMService.common.model;
 
 import java.io.Serializable;
 
+/**
+ * Basic response that all other responses must inheret for REST services.
+ *
+ * @author Amir
+ */
 public class BaseResponse implements Serializable {
 
     private Integer responseCode;

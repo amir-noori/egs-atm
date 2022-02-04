@@ -8,7 +8,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
+/**
+ * Utility class for manipulating and validating MD5 hashes.
+ *
+ * @author Amir
+ */
 public class HashUtils {
 
     private static final Logger log = LogManager.getLogger(HashUtils.class);

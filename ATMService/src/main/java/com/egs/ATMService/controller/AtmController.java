@@ -20,6 +20,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * The entry point for ATM services.
+ *
+ * @author Amir
+ */
 @RestController
 @RequestMapping("/atm/service")
 public class AtmController {
@@ -27,7 +32,12 @@ public class AtmController {
     private static final Logger log = LogManager.getLogger(AtmController.class);
 
 
+    /**
+     * rest tempale to consume bank services
+     */
     final RestTemplate restTemplate;
+
+
     final Environment environment;
 
     @Autowired
@@ -37,6 +47,12 @@ public class AtmController {
     }
 
 
+    /**
+     * Resilience4J method for authenticateUserCard rest service.
+     *
+     * @param exception the exception accured while calling the service
+     * @return a AuthenticateUserCardResponse
+     */
     public AuthenticateUserCardResponse bankAuthenticationIssue(Throwable exception) {
         log.warn("There is an issue with the bank authentication service: " + exception.getMessage());
         String message = "Bank authentication service is down momentarily. Please try later.";
@@ -47,6 +63,12 @@ public class AtmController {
         return response;
     }
 
+    /**
+     * Resilience4J method for ban transaction rest services.
+     *
+     * @param exception the exception accured while calling the service
+     * @return a BankTransactionResponse
+     */
     public BankTransactionResponse bankTransactionIssue(Throwable exception) {
         log.warn("There is an issue with the bank authentication service: " + exception.getMessage());
         String message = "Bank service is down momentarily. Please try later.";
@@ -57,11 +79,23 @@ public class AtmController {
         return response;
     }
 
+    /**
+     * simple method to check if service is up.
+     *
+     * @return
+     */
     @GetMapping("/test")
     public String test() {
         return "ATM is OK.";
     }
 
+    /**
+     * REST service to authenticate bank card with PIN code or finger print.
+     *
+     * @param request
+     * @param httpServletRequest
+     * @return a AuthenticateUserCardResponse
+     */
     @PostMapping("/authenticate")
     @CircuitBreaker(name = "authenticateUserCard", fallbackMethod = "bankAuthenticationIssue")
     public AuthenticateUserCardResponse authenticateUserCard(@Valid @RequestBody AuthenticateUserCardRequest request,
@@ -99,6 +133,13 @@ public class AtmController {
         return null;
     }
 
+    /**
+     * REST service to initialze and validate card for transactions
+     *
+     * @param request
+     * @param httpServletRequest
+     * @return a InitializeBankCardResponse
+     */
     @PostMapping("/initialize")
     public InitializeBankCardResponse initializeConnectionWithBank(InitializeBankCardRequest request, HttpServletRequest httpServletRequest) {
         return initializeConnection(request, httpServletRequest);
@@ -130,6 +171,14 @@ public class AtmController {
     }
 
 
+    /**
+     * REST service to check the card balance.
+     *
+     * @param request
+     * @param httpServletRequest
+     * @return
+     * @throws NoAuthenticationHeadersException when there is no JWT token or invalid token.
+     */
     @PostMapping("/balance")
     @CircuitBreaker(name = "checkBalance", fallbackMethod = "bankTransactionIssue")
     public BankTransactionResponse checkBalance(@Valid @RequestBody BankTransactionRequest request, HttpServletRequest httpServletRequest) throws NoAuthenticationHeadersException {
@@ -143,6 +192,14 @@ public class AtmController {
         return initResponseEntity.getBody();
     }
 
+    /**
+     * REST service to deposit money to bank card.
+     *
+     * @param request
+     * @param httpServletRequest
+     * @return
+     * @throws NoAuthenticationHeadersException when there is no JWT token or invalid token.
+     */
     @PostMapping("/deposit")
     @CircuitBreaker(name = "deposit", fallbackMethod = "bankTransactionIssue")
     public BankTransactionResponse deposit(@Valid @RequestBody BankTransactionRequest request, HttpServletRequest httpServletRequest) throws NoAuthenticationHeadersException {
@@ -156,6 +213,14 @@ public class AtmController {
         return initResponseEntity.getBody();
     }
 
+    /**
+     * REST service to withdrawl money from bank card.
+     *
+     * @param request
+     * @param httpServletRequest
+     * @return
+     * @throws NoAuthenticationHeadersException when there is no JWT token or invalid token.
+     */
     @PostMapping("/withdrawal")
     @CircuitBreaker(name = "withdrawal", fallbackMethod = "bankTransactionIssue")
     public BankTransactionResponse withdrawal(@Valid @RequestBody BankTransactionRequest request, HttpServletRequest httpServletRequest) throws NoAuthenticationHeadersException {
@@ -169,6 +234,13 @@ public class AtmController {
         return initResponseEntity.getBody();
     }
 
+    /**
+     * helper method to provide the required headers for authentication.
+     *
+     * @param httpServletRequest
+     * @return
+     * @throws NoAuthenticationHeadersException when there is no JWT token or invalid token.
+     */
     private HttpHeaders getAuthenticationHeaders(HttpServletRequest httpServletRequest) throws NoAuthenticationHeadersException {
         HttpSession session = httpServletRequest.getSession();
         Object tokenAttribute = session.getAttribute("token");
@@ -176,7 +248,7 @@ public class AtmController {
         HttpHeaders httpHeaders = new HttpHeaders();
         if (tokenAttribute != null) {
             String token = tokenAttribute.toString();
-            if(!token.equals("")) {
+            if (!token.equals("")) {
                 httpHeaders.add("token", token);
             } else {
                 throw new NoAuthenticationHeadersException();
@@ -186,7 +258,7 @@ public class AtmController {
         }
         if (cardNumberAttribute != null) {
             String cardNumber = cardNumberAttribute.toString();
-            if(!cardNumber.equals("")) {
+            if (!cardNumber.equals("")) {
                 httpHeaders.add("cardNumber", cardNumber);
             } else {
                 throw new NoAuthenticationHeadersException();

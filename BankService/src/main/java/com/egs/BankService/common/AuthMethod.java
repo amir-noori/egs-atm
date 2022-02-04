@@ -1,6 +1,8 @@
 package com.egs.BankService.common;
 
-
+/**
+ * ENUM type for different types of authentication methods.
+ */
 public enum AuthMethod {
 
     PIN_CODE("1"),

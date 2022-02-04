@@ -3,6 +3,11 @@ package com.egs.BankService.exception;
 import com.egs.BankService.common.TransactionType;
 import com.egs.BankService.data.model.BankCard;
 
+/**
+ * This exception is thrown when there is an issue with a bank transaction.
+ *
+ * @author Amir
+ */
 public class BankTransactionException extends Exception {
 
     private String description;

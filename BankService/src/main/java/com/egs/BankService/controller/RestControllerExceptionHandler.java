@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * Exception handler for bank REST services.
+ *
+ * @author Amir
+ */
 @ControllerAdvice
 public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -18,6 +23,13 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
         super();
     }
 
+    /**
+     * handles exceptions of type BankTransactionException
+     *
+     * @param exception the exception thrown in the REST controller.
+     * @param request
+     * @return a ResponseEntity<Object>
+     */
     @ExceptionHandler({BankTransactionException.class})
     public ResponseEntity<Object> handleBadRequest(final BankTransactionException exception, final WebRequest request) {
         String message = "Error in Transaction: \n" + "Bank Card: " + exception.getBankCard().getCardNumber() + "\n" +
@@ -28,6 +40,13 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
         return handleExceptionInternal(exception, response, null, HttpStatus.OK, request);
     }
 
+    /**
+     * handles exceptions of type CustomAuthenticationException
+     *
+     * @param exception exception the exception thrown in the REST controller.
+     * @param request
+     * @return a ResponseEntity<Object>
+     */
     @ExceptionHandler({CustomAuthenticationException.class})
     public ResponseEntity<Object> handleBadRequest(final CustomAuthenticationException exception, final WebRequest request) {
         String message = "hmm... something is wrong!";

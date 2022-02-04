@@ -29,7 +29,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/**
+ * Filder to check the JWT token and create one if no token exists
+ *
+ * @author Amir
+ */
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private static final Logger log = LogManager.getLogger(AuthenticationFilter.class);

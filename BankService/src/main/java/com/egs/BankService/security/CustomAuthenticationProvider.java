@@ -14,6 +14,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+/**
+ * Custom authenticator to check the bank card and ban user.
+ *
+ * @author Amir
+ */
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 

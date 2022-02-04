@@ -13,6 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Utility class for manipulating and validating JWT.
+ *
+ * @see https://github.com/koushikkothagal/spring-security-jwt
+ * @author koushikkothagal
+ */
 @Service
 public class JwtUtil {
 

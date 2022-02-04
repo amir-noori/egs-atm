@@ -17,6 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
+/**
+ * Filter to check every request for a valid JWt token and matching card number.
+ *
+ * @author Amir
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
